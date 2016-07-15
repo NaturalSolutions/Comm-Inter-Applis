@@ -1,0 +1,8 @@
+﻿
+CREATE TABLE TMessageDynPropvsERD
+(
+ERDName	VARCHAR(500),
+EColName	VARCHAR(500),
+TypeProp	nvarchar(MAX)
+CONSTRAINT pk_DynPropvsERD PRIMARY KEY CLUSTERED(ERDName) 
+)

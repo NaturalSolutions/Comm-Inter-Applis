@@ -104,7 +104,7 @@ BEGIN
 		) C (PropName,PropValue)
 		WHERE M.pk_MessageSend IN (SELECT ID FROM #MessageIDs)
 
-		TRUNCATE TABLE #MessageIDs
+		DELETE FROM  #MessageIDs
 
 		/**************** Exporting Protocole  ********************/
 
@@ -153,9 +153,9 @@ BEGIN
 		WHERE M.pk_MessageSend in (SELECT ID FROM #MessageIDs)
 
 
-		SELECT m.pk_MessageSend,v.Name,CASE WHEN TYPEPROP ='STring' THEN ValueString WHEN Typeprop ='Integer' THEN convert(varchar,valueint) ELSE ValueString END,NULL
-		FROM ObservationDynPropValuesNow V JOIN [TMessageSend]  M on convert(int,m.[ObjectId]) = V.FK_Observation
-		WHERE M.pk_MessageSend in (SELECT ID FROM #MessageIDs)
+		--SELECT m.pk_MessageSend,v.Name,CASE WHEN TYPEPROP ='STring' THEN ValueString WHEN Typeprop ='Integer' THEN convert(varchar,valueint) ELSE ValueString END,NULL
+		--FROM ObservationDynPropValuesNow V JOIN [TMessageSend]  M on convert(int,m.[ObjectId]) = V.FK_Observation
+		--WHERE M.pk_MessageSend in (SELECT ID FROM #MessageIDs)
 
 
 		print 'COMMIT TRAN'

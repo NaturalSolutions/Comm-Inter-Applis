@@ -47,12 +47,12 @@ BEGIN
 				BEGIN
 
 
-					SET @SQLText = ' DELETE D FROM  ' + @DestDB + '.TMessageReceivedDetail  D WHERE exists (select * from  ' + @DestDB + '.TMessageReceived M where M.isMessageComplete = 0 and M.Provenance =''' + dbo.GetProvenance() + ''' and D.fk_MessageReceived = M.pk_MessageReceived and d.Provenance = m.Provenance)'
+					SET @SQLText = ' DELETE D FROM  ' + @DestDB + '.TMessageReceivedDetail  D WHERE exists (select * from  ' + @DestDB + '.TMessageReceived M where (M.isMessageComplete = 0 OR M.isMessageComplete IS NULL) and M.Provenance =''' + dbo.GetProvenance() + ''' and D.fk_MessageReceived = M.pk_MessageReceived and d.Provenance = m.Provenance)'
 					print @SQLText
 					
 					EXEC(@SQLText)
 
-					SET @SQLText = ' DELETE M FROM  ' + @DestDB + '.TMessageReceived  M WHERE  M.isMessageComplete = 0 and Provenance =''' + dbo.GetProvenance() + ''''
+					SET @SQLText = ' DELETE M FROM  ' + @DestDB + '.TMessageReceived  M WHERE  (M.isMessageComplete = 0 OR M.isMessageComplete IS NULL) and Provenance =''' + dbo.GetProvenance() + ''''
 					print @SQLText
 					
 					EXEC(@SQLText)

@@ -18,15 +18,32 @@ CREATE TABLE [dbo].[TPropagation](
 	[Propagation] [int] NOT NULL,
 	[Date_Modif] [date] NOT NULL,
 	[Comment] [varchar](max)  NULL,
- CONSTRAINT [PK_TPropagation] PRIMARY KEY CLUSTERED 
-(
-	[Pk_ID] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+ CONSTRAINT [PK_TPropagation] PRIMARY KEY CLUSTERED (	[Pk_ID] )
+) 
 
+
+-- insertion de la règle de propagation par défaut.
+
+INSERT INTO [dbo].[TPropagation]
+           ([FB_ID]
+           ,[Source_ID]
+           ,[Instance]
+           ,[TypeObject]
+           ,[Priority]
+           ,[Propagation]
+           ,[Date_Modif]
+           ,[Comment])
+     VALUES
+           (-1
+           ,-1
+           ,-1
+           ,NULL
+           ,50
+           ,1
+           ,getdate()
+           ,NULL)
 GO
 
-SET ANSI_PADDING OFF
-GO
+
 
 

@@ -7,6 +7,7 @@ CREATE TABLE TableACopier(
 ,[Name] [varchar](250) NOT NULL
 ,[IdNamere] [varchar](250) NOT NULL
 ,[TypeObject] [varchar](50) NOT NULL
+,idObject [varchar](250) NOT NULL
 ,[OrdreExecution] INT NOT NULL
 )
 

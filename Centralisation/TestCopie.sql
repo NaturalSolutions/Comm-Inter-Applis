@@ -1,6 +1,6 @@
 
 DECLARE @ID INT
 
-select @ID=ID FROM SourceTarget where SourceDatabase='NARC_TRACK_MACQ_New.dbo.'
+select @ID=ID FROM SourceTarget where SourceDatabase='Referentiel_EcoReleve.dbo.'
 
 exec CopierUneSource @ID

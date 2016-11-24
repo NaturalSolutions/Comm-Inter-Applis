@@ -18,99 +18,115 @@ INSERT INTO [dbo].[TableACopier]
            ([Name]
            ,[IdNamere]
 		   ,[TypeObject],idObject
-           ,[OrdreExecution])
+           ,[OrdreExecution]
+		   ,AllowDelete)
      VALUES
            ('TProtocole'
            ,'TPro_pk_id'
 		   ,'ProtocoleTrack'
 		   ,'TPro_pk_id'
-           ,5)
+           ,5
+		   ,0)
 
 
 INSERT INTO [dbo].[TableACopier]
            ([Name]
            ,[IdNamere]
 		   ,[TypeObject],idObject
-           ,[OrdreExecution])
+           ,[OrdreExecution]
+		    ,AllowDelete)
      VALUES
            ('TObservation'
            ,'TObs_pk_id'
 		   ,'ProtocoleTrack'
 		   ,'TObs_FK_TProID'
-           ,10)
+           ,10
+		   ,0)
 
 INSERT INTO [dbo].[TableACopier]
            ([Name]
            ,[IdNamere]
 		   ,[TypeObject],idObject
-           ,[OrdreExecution])
+           ,[OrdreExecution]
+		    ,AllowDelete)
      VALUES
            ('TType'
            ,'TTyp_pk_id'
 		   ,'TypeTrack'
 		   ,'TTyp_pk_id'
-           ,1)
+           ,1
+		   ,0)
 
 INSERT INTO [dbo].[TableACopier]
            ([Name]
            ,[IdNamere]
 		   ,[TypeObject],idObject
-           ,[OrdreExecution])
+           ,[OrdreExecution]
+		    ,AllowDelete)
      VALUES
            ('TTTypeBase'
            ,'TTBse_pk_id'
 		   ,'TTypeBaseTrack'
 		   ,'TTBse_pk_id'
-           ,0)
+           ,0
+		   ,0)
 		
 INSERT INTO [dbo].[TableACopier]
            ([Name]
            ,[IdNamere]
 		   ,[TypeObject],idObject
-           ,[OrdreExecution])
+           ,[OrdreExecution]
+		    ,AllowDelete)
      VALUES
            ('Tunite'
            ,'TUni_pk_id'
 		   ,'UniteTrack'
 		   ,'TUni_pk_id'
-           ,0)
+           ,0
+		   ,0)
 
 
 INSERT INTO [dbo].[TableACopier]
            ([Name]
            ,[IdNamere]
 		   ,[TypeObject],idObject
-           ,[OrdreExecution])
+           ,[OrdreExecution]
+		    ,AllowDelete)
      VALUES
            ('TTProtocole'
            ,'TTpro_PK_ID'
 		   ,'TypeProtocoleTrack'
 		   ,'TTpro_PK_ID'
-           ,0)
+           ,0
+		   ,0)
 
 INSERT INTO [dbo].[TableACopier]
            ([Name]
            ,[IdNamere]
 		   ,[TypeObject],idObject
-           ,[OrdreExecution])
+           ,[OrdreExecution]
+		    ,AllowDelete)
      VALUES
            ('TTFrequence'
            ,'TTFre_PK_ID'
 		   ,'FrequenceTrack'
 		   ,'TTFre_PK_ID'
-           ,0)
+           ,0
+		   ,0)
 
 INSERT INTO [dbo].[TableACopier]
            ([Name]
            ,[IdNamere]
 		   ,[TypeObject],idObject
-           ,[OrdreExecution])
+           ,[OrdreExecution]
+		    ,AllowDelete)
      VALUES
            ('TChampLie'
            ,'TCLie_PK_ID'
 		   ,'ChampLieTrack'
 		   ,'TCLie_PK_ID'
-           ,0)
+           ,0
+		   ,0)
 		   
 
 
@@ -118,25 +134,30 @@ INSERT INTO [dbo].[TableACopier]
            ([Name]
            ,[IdNamere]
 		   ,[TypeObject],idObject
-           ,[OrdreExecution])
+           ,[OrdreExecution]
+		    ,AllowDelete)
      VALUES
            ('TActivite'
            ,'TAct_PK_ID'
 		   ,'ActiviteTrack'
 		   ,'TAct_PK_ID'
-           ,0)
+           ,0
+		   ,0)
 
 INSERT INTO [dbo].[TableACopier]
            ([Name]
            ,[IdNamere]
 		   ,[TypeObject],idObject
-           ,[OrdreExecution])
+           ,[OrdreExecution]
+		    ,AllowDelete
+		   )
      VALUES
            ('TAsyncProcessList'
            ,'TAPL_PK_ID'
 		   ,'RegleImportTrack'
 		   ,'TAPL_PK_ID'
            ,0)
+		   ,0
 
 
  INSERT INTO [dbo].[SourceTarget_Table]

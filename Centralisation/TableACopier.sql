@@ -1,6 +1,8 @@
 
 -- TODO: Rajouter les foreign Key + primary Key
-
+DROP TABLE TableACopier
+DROP TABLE SourceTarget
+DROP TABLE SourceTarget_Table
 
 CREATE TABLE TableACopier(
 [ID] [int] IDENTITY(1,1) 
@@ -9,8 +11,13 @@ CREATE TABLE TableACopier(
 ,[TypeObject] [varchar](50) NOT NULL
 ,idObject [varchar](250) NOT NULL
 ,[OrdreExecution] INT NOT NULL
-)
+,AllowDelete BIT NOT NULL
 
+PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+) ON [PRIMARY]
+)
 
 
 
@@ -19,17 +26,22 @@ CREATE TABLE SourceTarget(
 ,[SourceDatabase] [varchar](250) NOT NULL
 ,[TargetDatabase] [varchar](250) NOT NULL
 ,[Instance] [int] NOT NULL,
-)
-
+PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+))
 
 
 
 
 
 CREATE TABLE SourceTarget_Table(
+ID [int] IDENTITY(1,1),
 fk_SourceTarget INT NULL
-,fk_TableACopier INT NULL
+,fk_TableACopier INT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
 )
-
-
+)
 

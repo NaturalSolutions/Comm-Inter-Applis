@@ -156,8 +156,8 @@ INSERT INTO [dbo].[TableACopier]
            ,'TAPL_PK_ID'
 		   ,'RegleImportTrack'
 		   ,'TAPL_PK_ID'
-           ,0)
-		   ,0
+           ,0
+		   ,0)
 
 
  INSERT INTO [dbo].[SourceTarget_Table]

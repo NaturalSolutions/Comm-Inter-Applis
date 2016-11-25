@@ -37,11 +37,18 @@ PRIMARY KEY CLUSTERED
 
 CREATE TABLE SourceTarget_Table(
 ID [int] IDENTITY(1,1),
-fk_SourceTarget INT NULL
-,fk_TableACopier INT NULL,
+FK_SourceTarget INT NULL
+,FK_TableACopier INT NULL,
 PRIMARY KEY CLUSTERED 
 (
 	[ID] ASC
 )
 )
+ALTER TABLE [dbo].SourceTarget_Table  WITH CHECK ADD FOREIGN KEY(FK_SourceTarget)
+REFERENCES [dbo].SourceTarget ([ID])
+GO
+
+ALTER TABLE [dbo].SourceTarget_Table  WITH CHECK ADD FOREIGN KEY(FK_TableACopier)
+REFERENCES [dbo].TableACopier ([ID])
+
 

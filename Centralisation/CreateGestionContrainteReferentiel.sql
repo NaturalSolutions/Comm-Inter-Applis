@@ -18,11 +18,11 @@ BEGIN
 	DECLARE @ErrorMessage NVARCHAR(4000)
 	DECLARE @ErrorSeverity INT
 	DECLARE @ErrorState INT
+	DECLARE @cur_SQL NVARCHAR(MAX)
 
 	SET @SQL=''
-	BEGIN TRY
-		BEGIN TRAN
-			SET @ProcessusOk = 'True'
+	SET @ProcessusOk = 'False'
+	BEGIN TRY				
 			SELECT @SourceDatabase=[SourceDatabase]
 				  ,@TargetDatabase=[TargetDatabase]
 				  ,@Instance=[Instance]
@@ -32,40 +32,97 @@ BEGIN
 
 			IF @ProcessusStage = 'Start'
 				BEGIN
+					SET @cur_SQL = 'IF EXISTS (SELECT * FROM sys.synonyms WHERE name = ''current_sysobjects'')  drop synonym current_sysobjects ; 
+					CREATE SYNONYM current_sysobjects FOR ' + @TargetDatabase + 'sysobjects'
+					print @cur_SQL
+					exec sp_executesql @cur_SQL
+					SET @cur_SQL = 'IF EXISTS (SELECT * FROM sys.synonyms WHERE name = ''current_sysdefault_constraints'')  drop synonym current_sysdefault_constraints ; 
+					CREATE SYNONYM current_sysdefault_constraints FOR ' +replace(@TargetDatabase,'dbo.','sys.') + 'default_constraints'
+					print @cur_SQL
+					exec sp_executesql @cur_SQL
+					SET @cur_SQL = 'IF EXISTS (SELECT * FROM sys.synonyms WHERE name = ''current_sysconstraints'')  drop synonym current_sysconstraints ; 
+					CREATE SYNONYM current_sysconstraints FOR ' + @TargetDatabase + 'sysconstraints'
+					print @cur_SQL
+					exec sp_executesql @cur_SQL
+					SET @cur_SQL = 'IF EXISTS (SELECT * FROM sys.synonyms WHERE name = ''current_syscolumns'')  drop synonym current_syscolumns ; 
+					CREATE SYNONYM current_syscolumns FOR ' + @TargetDatabase + 'syscolumns'
+					print @cur_SQL
+					exec sp_executesql @cur_SQL
+					SET @cur_SQL = 'IF EXISTS (SELECT * FROM sys.synonyms WHERE name = ''current_sysforeignkeys'')  drop synonym current_sysforeignkeys ; 
+					CREATE SYNONYM current_sysforeignkeys FOR ' + @TargetDatabase + 'sysforeignkeys'
+					print @cur_SQL
+					exec sp_executesql @cur_SQL
+
 					SELECT @SQL=@SQL+'ALTER TABLE '+ @TargetDatabase+OBJECT_NAME(SO.parent_obj)+' DROP CONSTRAINT ['+OBJECT_NAME(SO.ID)+']; '
-						FROM sysobjects SO 
-						LEFT OUTER JOIN sys.default_constraints SDC ON SO.name = SDC.name 
-						LEFT OUTER JOIN sysconstraints SC ON SO.id = SC.constid 
-						INNER JOIN syscolumns SM ON SC.colid = SM.colid AND SO.parent_obj = SM.id
-						LEFT OUTER JOIN sysforeignkeys SFK ON SFK.constid = so.id 
-						LEFT OUTER JOIN syscolumns SM2 ON SFK.rkey = SM2.colid AND SFK.rkeyid = SM2.id
+						FROM current_sysobjects SO 
+						LEFT OUTER JOIN current_sysdefault_constraints SDC ON SO.name = SDC.name 
+						LEFT OUTER JOIN current_sysconstraints SC ON SO.id = SC.constid 
+						INNER JOIN current_syscolumns SM ON SC.colid = SM.colid AND SO.parent_obj = SM.id
+						LEFT OUTER JOIN current_sysforeignkeys SFK ON SFK.constid = so.id 
+						LEFT OUTER JOIN current_syscolumns SM2 ON SFK.rkey = SM2.colid AND SFK.rkeyid = SM2.id
 					WHERE SO.xtype IN ('F','D') 
 					AND OBJECT_NAME(SO.PARENT_OBJ) IN (SELECT DISTINCT [Name] 
 															FROM [dbo].[TableACopier] TAC 
 															INNER JOIN [dbo].[SourceTarget_Table] STT ON TAC.ID = STT.[fk_TableACopier]
 														WHERE [fk_SourceTarget] = @IDSourceTarget)
+					print 'SQLSTART='+@SQL
 					EXEC(@SQL)
+					SET @cur_SQL = 'IF EXISTS (SELECT * FROM sys.synonyms WHERE name = ''current_sysobjects'')  drop synonym current_sysobjects ; 
+					IF EXISTS (SELECT * FROM sys.synonyms WHERE name = ''current_sysdefault_constraints'')  drop synonym current_sysdefault_constraints ;
+					IF EXISTS (SELECT * FROM sys.synonyms WHERE name = ''current_sysconstraints'')  drop synonym current_sysconstraints ;  
+					IF EXISTS (SELECT * FROM sys.synonyms WHERE name = ''current_syscolumns'')  drop synonym current_syscolumns ;
+					IF EXISTS (SELECT * FROM sys.synonyms WHERE name = ''current_sysforeignkeys'')  drop synonym current_sysforeignkeys ;'
+					print @cur_SQL
+					exec sp_executesql @cur_SQL
 				END
 			ELSE IF @ProcessusStage = 'End'
 				BEGIN
+					SET @cur_SQL = 'IF EXISTS (SELECT * FROM sys.synonyms WHERE name = ''current_sysobjects'')  drop synonym current_sysobjects ; 
+					CREATE SYNONYM current_sysobjects FOR ' + @SourceDatabase + 'sysobjects'
+					print @cur_SQL
+					exec sp_executesql @cur_SQL
+					SET @cur_SQL = 'IF EXISTS (SELECT * FROM sys.synonyms WHERE name = ''current_sysdefault_constraints'')  drop synonym current_sysdefault_constraints ; 
+					CREATE SYNONYM current_sysdefault_constraints FOR ' +replace(@SourceDatabase,'dbo.','sys.') + 'default_constraints'
+					print @cur_SQL
+					exec sp_executesql @cur_SQL
+					SET @cur_SQL = 'IF EXISTS (SELECT * FROM sys.synonyms WHERE name = ''current_sysconstraints'')  drop synonym current_sysconstraints ; 
+					CREATE SYNONYM current_sysconstraints FOR ' + @SourceDatabase + 'sysconstraints'
+					print @cur_SQL
+					exec sp_executesql @cur_SQL
+					SET @cur_SQL = 'IF EXISTS (SELECT * FROM sys.synonyms WHERE name = ''current_syscolumns'')  drop synonym current_syscolumns ; 
+					CREATE SYNONYM current_syscolumns FOR ' + @SourceDatabase + 'syscolumns'
+					print @cur_SQL
+					exec sp_executesql @cur_SQL
+					SET @cur_SQL = 'IF EXISTS (SELECT * FROM sys.synonyms WHERE name = ''current_sysforeignkeys'')  drop synonym current_sysforeignkeys ; 
+					CREATE SYNONYM current_sysforeignkeys FOR ' + @SourceDatabase + 'sysforeignkeys'
+					print @cur_SQL
+					exec sp_executesql @cur_SQL
 					SELECT @SQL=@SQL+STUFF(CASE 
 								WHEN SO.xtype='D' THEN 
 									'ALTER TABLE '+ @TargetDatabase+OBJECT_NAME(SO.parent_obj)+' ADD CONSTRAINT ['+OBJECT_NAME(SO.ID)+'] DEFAULT '+SDC.definition+' FOR ['+SM.name+']; '--,*,OBJECT_NAME(PARENT_OBJECT_ID)
 								WHEN SO.xtype = 'F' THEN 
-									'ALTER TABLE '+ @TargetDatabase+OBJECT_NAME(SO.parent_obj)+' WITH CHECK ADD CONSTRAINT ['+OBJECT_NAME(SO.ID)+'] FOREIGN KEY (['+SM.name+']) REFERENCES '+@TargetDatabase+'[dbo].['+OBJECT_NAME(SFK.rkeyid)+'] (['+SM2.name+']); '
+									'ALTER TABLE '+ @TargetDatabase+OBJECT_NAME(SO.parent_obj)+' WITH CHECK ADD CONSTRAINT ['+OBJECT_NAME(SO.ID)+'] FOREIGN KEY (['+SM.name+']) REFERENCES '+@TargetDatabase+'['+OBJECT_NAME(SFK.rkeyid)+'] (['+SM2.name+']); '
 							END,1,0,'')
-						FROM sysobjects SO 
-						LEFT OUTER JOIN sys.default_constraints SDC ON SO.name = SDC.name 
-						LEFT OUTER JOIN sysconstraints SC ON SO.id = SC.constid 
-						INNER JOIN syscolumns SM ON SC.colid = SM.colid AND SO.parent_obj = SM.id
-						LEFT OUTER JOIN sysforeignkeys SFK ON SFK.constid = so.id 
-						LEFT OUTER JOIN syscolumns SM2 ON SFK.rkey = SM2.colid AND SFK.rkeyid = SM2.id
+						FROM current_sysobjects SO 
+						LEFT OUTER JOIN current_sysdefault_constraints SDC ON SO.name = SDC.name 
+						LEFT OUTER JOIN current_sysconstraints SC ON SO.id = SC.constid 
+						INNER JOIN current_syscolumns SM ON SC.colid = SM.colid AND SO.parent_obj = SM.id
+						LEFT OUTER JOIN current_sysforeignkeys SFK ON SFK.constid = so.id 
+						LEFT OUTER JOIN current_syscolumns SM2 ON SFK.rkey = SM2.colid AND SFK.rkeyid = SM2.id
 					WHERE SO.xtype IN ('F','D') 
 					AND OBJECT_NAME(SO.PARENT_OBJ) IN (SELECT DISTINCT [Name] 
 															FROM [dbo].[TableACopier] TAC 
 															INNER JOIN [dbo].[SourceTarget_Table] STT ON TAC.ID = STT.[fk_TableACopier]
 														WHERE [fk_SourceTarget] = @IDSourceTarget)
+					print 'SQLEND='+@SQL
 					EXEC(@SQL)
+					SET @cur_SQL = 'IF EXISTS (SELECT * FROM sys.synonyms WHERE name = ''current_sysobjects'')  drop synonym current_sysobjects ; 
+					IF EXISTS (SELECT * FROM sys.synonyms WHERE name = ''current_sysdefault_constraints'')  drop synonym current_sysdefault_constraints ;
+					IF EXISTS (SELECT * FROM sys.synonyms WHERE name = ''current_sysconstraints'')  drop synonym current_sysconstraints ;  
+					IF EXISTS (SELECT * FROM sys.synonyms WHERE name = ''current_syscolumns'')  drop synonym current_syscolumns ;
+					IF EXISTS (SELECT * FROM sys.synonyms WHERE name = ''current_sysforeignkeys'')  drop synonym current_sysforeignkeys ;'
+					print @cur_SQL
+					exec sp_executesql @cur_SQL
 				END
 			ELSE
 				BEGIN
@@ -73,13 +130,11 @@ BEGIN
 										15, -- Severity.
 										2 -- State.
 										);
-				END
-		COMMIT TRAN
+				END	
+			SET @ProcessusOk = 'True'	
 	END TRY
-	BEGIN CATCH
-		ROLLBACK TRAN
-		print 'Erreur Gestion contraintes'
-		SET @ProcessusOk = 'False'			
+	BEGIN CATCH		
+		print 'Erreur Gestion contraintes'			
 		SELECT 
 			@ErrorMessage = ERROR_MESSAGE(),
 			@ErrorSeverity = ERROR_SEVERITY(),
@@ -87,9 +142,9 @@ BEGIN
 			SET @ErrorMessage = REPLACE(@ErrorMessage,'''','''''')
 			SET @SQL = 'INSERT INTO NSLog.dbo.TLOG_MESSAGES
 						VALUES (GETDATE(), 2, ''Centralisation'', ''SP : GestionContrainteReferentiel'', ''No user'', 0,
-						'+STR(@ErrorState)+', '''+@ErrorMessage+''', ''Severity: '' + CONVERT(varchar,'+STR(@ErrorSeverity)+')+''  Localisation: Constraints management error. Rollback Tran in catch.''); '
-			--print '=Error>'+@SQL
+						'+STR(@ErrorState)+', '''+@ErrorMessage+''', ''Severity: '' + CONVERT(varchar,'+STR(@ErrorSeverity)+')+''  Localisation: Constraints management error for '+@ProcessusStage+'ing process. Rollback Tran in catch.''); '
+			print '=Error>'+@SQL
 			EXEC(@SQL)
 	END CATCH
-
+	SELECT @ProcessusOk
 END

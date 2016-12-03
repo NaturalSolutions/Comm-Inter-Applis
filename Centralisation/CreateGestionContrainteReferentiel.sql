@@ -1,3 +1,5 @@
+
+
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GestionContrainteReferentiel]') AND type in (N'P', N'PC'))
 DROP PROCEDURE GestionContrainteReferentiel
 GO
@@ -52,6 +54,10 @@ BEGIN
 					CREATE SYNONYM current_sysforeignkeys FOR ' + @TargetDatabase + 'sysforeignkeys'
 					print @cur_SQL
 					exec sp_executesql @cur_SQL
+					SET @cur_SQL = 'IF EXISTS (SELECT * FROM sys.synonyms WHERE name = ''current_referential_constraints'')  drop synonym current_referential_constraints ; 
+					CREATE SYNONYM current_referential_constraints FOR ' + replace(@SourceDatabase,'dbo.','INFORMATION_SCHEMA.') + 'REFERENTIAL_CONSTRAINTS'
+					print @cur_SQL
+					exec sp_executesql @cur_SQL
 
 					SELECT @SQL=@SQL+'ALTER TABLE '+ @TargetDatabase+OBJECT_NAME(SO.parent_obj)+' DROP CONSTRAINT ['+OBJECT_NAME(SO.ID)+']; '
 						FROM current_sysobjects SO 
@@ -60,6 +66,7 @@ BEGIN
 						INNER JOIN current_syscolumns SM ON SC.colid = SM.colid AND SO.parent_obj = SM.id
 						LEFT OUTER JOIN current_sysforeignkeys SFK ON SFK.constid = so.id 
 						LEFT OUTER JOIN current_syscolumns SM2 ON SFK.rkey = SM2.colid AND SFK.rkeyid = SM2.id
+						LEFT OUTER JOIN current_referential_constraints RC ON RC.CONSTRAINT_NAME = SO.name
 					WHERE SO.xtype IN ('F','D') 
 					AND OBJECT_NAME(SO.PARENT_OBJ) IN (SELECT DISTINCT [Name] 
 															FROM [dbo].[TableACopier] TAC 
@@ -97,11 +104,24 @@ BEGIN
 					CREATE SYNONYM current_sysforeignkeys FOR ' + @SourceDatabase + 'sysforeignkeys'
 					print @cur_SQL
 					exec sp_executesql @cur_SQL
+					SET @cur_SQL = 'IF EXISTS (SELECT * FROM sys.synonyms WHERE name = ''current_referential_constraints'')  drop synonym current_referential_constraints ; 
+					CREATE SYNONYM current_referential_constraints FOR ' + replace(@SourceDatabase,'dbo.','INFORMATION_SCHEMA.') + 'current_referential_constraints'
+					print @cur_SQL
+					exec sp_executesql @cur_SQL
+					SET @cur_SQL = 'IF EXISTS (SELECT * FROM sys.synonyms WHERE name = ''current_referential_constraints'')  drop synonym current_referential_constraints ; 
+					CREATE SYNONYM current_referential_constraints FOR ' + replace(@SourceDatabase,'dbo.','INFORMATION_SCHEMA.') + 'REFERENTIAL_CONSTRAINTS'
+					print @cur_SQL
+					exec sp_executesql @cur_SQL
+
 					SELECT @SQL=@SQL+STUFF(CASE 
 								WHEN SO.xtype='D' THEN 
 									'ALTER TABLE '+ @TargetDatabase+OBJECT_NAME(SO.parent_obj)+' ADD CONSTRAINT ['+OBJECT_NAME(SO.ID)+'] DEFAULT '+SDC.definition+' FOR ['+SM.name+']; '--,*,OBJECT_NAME(PARENT_OBJECT_ID)
 								WHEN SO.xtype = 'F' THEN 
-									'ALTER TABLE '+ @TargetDatabase+OBJECT_NAME(SO.parent_obj)+' WITH CHECK ADD CONSTRAINT ['+OBJECT_NAME(SO.ID)+'] FOREIGN KEY (['+SM.name+']) REFERENCES '+@TargetDatabase+'['+OBJECT_NAME(SFK.rkeyid)+'] (['+SM2.name+']); '
+									'ALTER TABLE '+ @TargetDatabase+OBJECT_NAME(SO.parent_obj)+' WITH CHECK ADD CONSTRAINT ['+OBJECT_NAME(SO.ID)+'] FOREIGN KEY (['+SM.name+']) REFERENCES '+@TargetDatabase+'['+OBJECT_NAME(SFK.rkeyid)+'] (['+SM2.name+'])'
+									+CASE WHEN DELETE_RULE = 'CASCADE' THEN ' ON DELETE CASCADE'
+										ELSE ''
+										END+'
+									; '
 							END,1,0,'')
 						FROM current_sysobjects SO 
 						LEFT OUTER JOIN current_sysdefault_constraints SDC ON SO.name = SDC.name 
@@ -109,6 +129,7 @@ BEGIN
 						INNER JOIN current_syscolumns SM ON SC.colid = SM.colid AND SO.parent_obj = SM.id
 						LEFT OUTER JOIN current_sysforeignkeys SFK ON SFK.constid = so.id 
 						LEFT OUTER JOIN current_syscolumns SM2 ON SFK.rkey = SM2.colid AND SFK.rkeyid = SM2.id
+						LEFT OUTER JOIN current_referential_constraints RC ON RC.CONSTRAINT_NAME = SO.name
 					WHERE SO.xtype IN ('F','D') 
 					AND OBJECT_NAME(SO.PARENT_OBJ) IN (SELECT DISTINCT [Name] 
 															FROM [dbo].[TableACopier] TAC 

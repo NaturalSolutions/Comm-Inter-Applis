@@ -22,6 +22,7 @@ BEGIN
 			,@TargetDatabase VARCHAR(250)
 			,@TargetInstance INT
 			,@HasError BIT
+			,@DisableConstraint BIT
 
 			--DECLARE @IDSourceTarget INT; SET @IDSourceTarget = 1;
 			-- TODO Prendre en compte la table TPropagation
@@ -29,22 +30,25 @@ BEGIN
 	
 			SET @HasError = 0
 
-			SELECT @SourceDatabase = [SourceDatabase],@TargetDatabase=TargetDatabase,@TargetInstance=Instance
+			SELECT @SourceDatabase = [SourceDatabase],@TargetDatabase=TargetDatabase,@TargetInstance=Instance, @DisableConstraint=DisableConstraint
 			FROM SourceTarget
 			WHERE ID=@IDSourceTarget
 
 			print ' instance ' + convert(varchar,@TargetInstance)
 	
 			--Gestion des contraintes DROP
-			EXEC GestionContrainteReferentiel @IDSourceTarget,'Start',@ProcessOk OUTPUT
-			IF @ProcessOk = 0
+			IF @DisableConstraint=1
 				BEGIN
-					SET @HasError  =1
-					print 'Error in Constraints management from CopierSource'
-					RAISERROR ('Error in Constraints management from CopierSource Starting process, see TLOG_MESSAGES for details' , -- Message text.
-								15, -- Severity.
-								2 -- State.
-								);
+					EXEC GestionContrainteReferentiel @IDSourceTarget,'Start',@ProcessOk OUTPUT
+					IF @ProcessOk = 0
+						BEGIN
+							SET @HasError  =1
+							print 'Error in Constraints management from CopierSource'
+							RAISERROR ('Error in Constraints management from CopierSource Starting process, see TLOG_MESSAGES for details' , -- Message text.
+										15, -- Severity.
+										2 -- State.
+										);
+						END
 				END
 			
 			DECLARE @cur_SQL NVARCHAR(MAX)
@@ -127,7 +131,7 @@ BEGIN
 
 					select * from #IdToUpdate
 
-					-- On supprime les ID des objets qui ont comme première règle qui match un valeur de propagation à 0
+					-- On supprime les ID des objets qui ont comme première règle qui matche une valeur de propagation à 0
 					DELETE from #IdToUpdate 
 					where ID in (
 								select ID from
@@ -261,15 +265,18 @@ BEGIN
 		ELSE
 			BEGIN
 			--Gestion des contraintes ADD
-			EXEC GestionContrainteReferentiel @IDSourceTarget,'End',@ProcessOk OUTPUT
-			IF @ProcessOk = 0
+			IF @DisableConstraint=1
 				BEGIN
-					SET @HasError  =1
-					print 'Error in Constraints management from CopierSource'
-					RAISERROR ('Error in Constraints management from CopierSource Ending process, see TLOG_MESSAGES for details' , -- Message text.
-								15, -- Severity.
-								2 -- State.
-								);
+					EXEC GestionContrainteReferentiel @IDSourceTarget,'End',@ProcessOk OUTPUT
+					IF @ProcessOk = 0
+						BEGIN
+							SET @HasError  =1
+							print 'Error in Constraints management from CopierSource'
+							RAISERROR ('Error in Constraints management from CopierSource Ending process, see TLOG_MESSAGES for details' , -- Message text.
+										15, -- Severity.
+										2 -- State.
+										);
+						END
 				END
 			COMMIT TRAN 
 			END

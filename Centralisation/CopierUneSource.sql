@@ -2,7 +2,7 @@ IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Copie
 DROP PROCEDURE CopierUneSource
 GO
 
-CREATE PROCEDURE CopierUneSource(
+CREATE PROCEDURE [dbo].[CopierUneSource](
 	@IDSourceTarget INT
 )
 AS
@@ -37,7 +37,7 @@ BEGIN
 			print ' instance ' + convert(varchar,@TargetInstance)
 	
 			--Gestion des contraintes DROP
-			IF @DisableConstraint=1
+			IF @DisableConstraint='True'
 				BEGIN
 					EXEC GestionContrainteReferentiel @IDSourceTarget,'Start',@ProcessOk OUTPUT
 					IF @ProcessOk = 0
@@ -131,14 +131,14 @@ BEGIN
 
 					select * from #IdToUpdate
 
-					-- On supprime les ID des objets qui ont comme première règle qui matche une valeur de propagation à 0
+					-- On supprime les IDs des objets qui ont comme première règle qui match un valeur de propagation à 0
 					DELETE from #IdToUpdate 
 					where ID in (
 								select ID from
-								(SELECT row_number() over(partition by i.id order by [Priority]) nb,i.ID,p.propagation 
-								from [TPropagation] P LEFT JOIN #IdToUpdate I ON (i.IDObject = [Source_ID] or [Source_ID] =-1)
-								where (P.[Instance] = @TargetInstance or P.[Instance] =-1) and (p.[TypeObject] = @TypeObject or p.typeobject IS NULL)
-								) P where p.nb =1 and p.propagation=0
+								(SELECT row_number() over(partition by I.id order by [Priority]) nb,I.ID, P.propagation 
+								from [TPropagation] P LEFT JOIN #IdToUpdate I ON (I.IDObject = [Source_ID] or [Source_ID] =-1)
+								where (P.[Instance] = @TargetInstance or P.[Instance] =-1) and (P.[TypeObject] = @TypeObject or P.typeobject IS NULL)
+								) P where P.nb =1 and P.propagation=0
 					)		
 			
 			
@@ -221,12 +221,12 @@ BEGIN
 
 							INSERT INTO NSLog.dbo.TLOG_MESSAGES
 							VALUES (GETDATE(), 1, 'Centralisation', 'SP : CopierUneSource', 'No user', 2,
-							3, CONVERT(varchar,(select count(*) from #IdToUpdate))+ ' rows DELETED in '+@TargetDatabase +  @TableName
+							3, CONVERT(varchar,(select count(*) from #IdToDelete))+ ' rows DELETED in '+@TargetDatabase +  @TableName
 							, 'Concerned ID: ' + CONVERT(varchar,(SELECT STUFF((SELECT ','+ CONVERT(varchar,f.ID)
 																	FROM #IdToDelete f
 																	 FOR XML PATH('')), 1, 1, ''))
 													 )
-							+ 'With request: '+@SQLFinalDelete
+							+ ', With request: '+@SQLFinalDelete
 							)
 					END
 
@@ -265,7 +265,7 @@ BEGIN
 		ELSE
 			BEGIN
 			--Gestion des contraintes ADD
-			IF @DisableConstraint=1
+			IF @DisableConstraint='True'
 				BEGIN
 					EXEC GestionContrainteReferentiel @IDSourceTarget,'End',@ProcessOk OUTPUT
 					IF @ProcessOk = 0

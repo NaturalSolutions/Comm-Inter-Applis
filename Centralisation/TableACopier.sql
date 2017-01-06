@@ -1,8 +1,14 @@
 
 -- TODO: Rajouter les foreign Key + primary Key
-DROP TABLE TableACopier
-DROP TABLE SourceTarget
-DROP TABLE SourceTarget_Table
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[TableACopier]') AND type in (N'U'))
+DROP TABLE [dbo].[TableACopier]
+GO
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SourceTarget]') AND type in (N'U'))
+DROP TABLE [dbo].[SourceTarget]
+GO
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SourceTarget_Table]') AND type in (N'U'))
+DROP TABLE [dbo].[SourceTarget_Table]
+GO
 
 CREATE TABLE TableACopier(
 [ID] [int] IDENTITY(1,1) 

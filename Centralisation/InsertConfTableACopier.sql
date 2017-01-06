@@ -7,8 +7,7 @@ DELETE FROM [SourceTarget]
 INSERT INTO [dbo].[SourceTarget]
            ([SourceDatabase]
            ,[TargetDatabase]
-		   ,[Instance]
-	    ,[DisableConstraint] [bit] NOT NULL CONSTRAINT [DF_SourceTarget_DisableConstraint]  DEFAULT ((0)),)
+		   ,[Instance])
 		   SELECT 'NARC_TRACK_MACQ_New.dbo.','NARC_TRACK_MACQ.dbo.',i.TIns_PK_ID
 		   from securite.dbo.TInstance I where i.TIns_Database = 'NARC_TRACK_MACQ' and TIns_ReadOnly=0
 

@@ -1,16 +1,16 @@
 
 -- TODO: Rajouter les foreign Key + primary Key
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[TableACopier]') AND type in (N'U'))
-DROP TABLE [dbo].[TableACopier]
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[_Centralisation_TablesToUpdate]') AND type in (N'U'))
+DROP TABLE [dbo].[_Centralisation_TablesToUpdate]
 GO
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SourceTarget]') AND type in (N'U'))
-DROP TABLE [dbo].[SourceTarget]
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[_Centralisation_SourceTarget]') AND type in (N'U'))
+DROP TABLE [dbo].[_Centralisation_SourceTarget]
 GO
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SourceTarget_Table]') AND type in (N'U'))
-DROP TABLE [dbo].[SourceTarget_Table]
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[_Centralisation_SourceTargetTable]') AND type in (N'U'))
+DROP TABLE [dbo].[_Centralisation_SourceTarget_Table]
 GO
 
-CREATE TABLE TableACopier(
+CREATE TABLE _Centralisation_TablesToUpdate(
 [ID] [int] IDENTITY(1,1) 
 ,[Name] [varchar](250) NOT NULL
 ,[IdNamere] [varchar](250) NOT NULL
@@ -27,7 +27,7 @@ PRIMARY KEY CLUSTERED
 
 
 
-CREATE TABLE SourceTarget(
+CREATE TABLE _Centralisation_SourceTarget(
 [ID] [int] IDENTITY(1,1) 
 ,[SourceDatabase] [varchar](250) NOT NULL
 ,[TargetDatabase] [varchar](250) NOT NULL
@@ -42,10 +42,10 @@ PRIMARY KEY CLUSTERED
 
 
 
-CREATE TABLE SourceTarget_Table(
+CREATE TABLE _Centralisation_SourceTargetTable(
 ID [int] IDENTITY(1,1),
 fk_SourceTarget INT NULL
-,fk_TableACopier INT NULL,
+,fk_TablesToUpdate INT NULL,
 PRIMARY KEY CLUSTERED 
 (
 	[ID] ASC

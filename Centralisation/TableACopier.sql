@@ -32,6 +32,7 @@ CREATE TABLE SourceTarget(
 ,[SourceDatabase] [varchar](250) NOT NULL
 ,[TargetDatabase] [varchar](250) NOT NULL
 ,[Instance] [int] NOT NULL,
+,[DisableConstraint] [bit] NOT NULL CONSTRAINT [DF_SourceTarget_DisableConstraint]  DEFAULT ((0)),
 PRIMARY KEY CLUSTERED 
 (
 	[ID] ASC

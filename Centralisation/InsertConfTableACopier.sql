@@ -1,4 +1,4 @@
-
+e
 
 DELETE FROM [SourceTarget_Table]
 DELETE FROM [TableACopier]
@@ -8,8 +8,8 @@ INSERT INTO [dbo].[SourceTarget]
            ([SourceDatabase]
            ,[TargetDatabase]
 		   ,[Instance])
-		   SELECT 'NARC_TRACK_MACQ_New.dbo.','NARC_TRACK_MACQ.dbo.',i.TIns_PK_ID
-		   from securite.dbo.TInstance I where i.TIns_Database = 'NARC_TRACK_MACQ' and TIns_ReadOnly=0
+		   SELECT 'Referentiel_Track.dbo.','ECWP_TRACK_UNDU.dbo.',i.TIns_PK_ID
+		   from securite.dbo.TInstance I where i.TIns_Database = 'ECWP_TRACK_UNDU' and TIns_ReadOnly=0
 
 
 

@@ -1,10 +1,10 @@
+r
 
-
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GestionContrainteReferentiel]') AND type in (N'P', N'PC'))
-DROP PROCEDURE GestionContrainteReferentiel
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[_Centralisation_ConstraintsManagement]') AND type in (N'P', N'PC'))
+DROP PROCEDURE _Centralisation_ConstraintsManagement
 GO
 
-CREATE PROCEDURE [dbo].[GestionContrainteReferentiel](
+CREATE PROCEDURE [dbo].[_Centralisation_ConstraintsManagement](
 	@ID_Centralisation_SourceTarget INT,
 	@ProcessusStage VARCHAR(5),  --Possible values =Start or End
 	@ProcessusOk BIT OUTPUT 

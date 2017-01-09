@@ -39,12 +39,12 @@ BEGIN
 			--Gestion des contraintes DROP
 			IF @DisableConstraint='True'
 				BEGIN
-					EXEC GestionContrainteReferentiel @ID_Centralisation_SourceTarget,'Start',@ProcessOk OUTPUT
+					EXEC _Centralisation_ConstraintsManagement @ID_Centralisation_SourceTarget,'Start',@ProcessOk OUTPUT
 					IF @ProcessOk = 0
 						BEGIN
 							SET @HasError  =1
-							print 'Error in Constraints management from CopierSource'
-							RAISERROR ('Error in Constraints management from CopierSource Starting process, see TLOG_MESSAGES for details' , -- Message text.
+							print 'Error in Constraints management from _Centralisation_UpdateDBFromReferentiel'
+							RAISERROR ('Error in Constraints management from _Centralisation_UpdateDBFromReferentiel Starting process, see TLOG_MESSAGES for details' , -- Message text.
 										15, -- Severity.
 										2 -- State.
 										);
@@ -267,12 +267,12 @@ BEGIN
 			--Gestion des contraintes ADD
 			IF @DisableConstraint='True'
 				BEGIN
-					EXEC GestionContrainteReferentiel @ID_Centralisation_SourceTarget,'End',@ProcessOk OUTPUT
+					EXEC _Centralisation_ConstraintsManagement @ID_Centralisation_SourceTarget,'End',@ProcessOk OUTPUT
 					IF @ProcessOk = 0
 						BEGIN
 							SET @HasError  =1
-							print 'Error in Constraints management from CopierSource'
-							RAISERROR ('Error in Constraints management from CopierSource Ending process, see TLOG_MESSAGES for details' , -- Message text.
+							print 'Error in Constraints management from _Centralisation_UpdateDBFromReferentiel'
+							RAISERROR ('Error in Constraints management from _Centralisation_UpdateDBFromReferentiel Ending process, see TLOG_MESSAGES for details' , -- Message text.
 										15, -- Severity.
 										2 -- State.
 										);

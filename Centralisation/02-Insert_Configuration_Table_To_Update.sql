@@ -5,8 +5,9 @@ DELETE FROM [_Centralisation_SourceTarget]
 INSERT INTO [dbo].[_Centralisation_SourceTarget]
            ([SourceDatabase]
            ,[TargetDatabase]
-		   ,[Instance])
-		   SELECT 'Referentiel_Track.dbo.','ECWP_TRACK_UNDU.dbo.',i.TIns_PK_ID
+	   ,[Instance]
+	   ,[DisableConstraint])
+		   SELECT 'Referentiel_Track.dbo.','ECWP_TRACK_UNDU.dbo.',i.TIns_PK_ID, True
 		   from securite.dbo.TInstance I where i.TIns_Database = 'ECWP_TRACK_UNDU' and TIns_ReadOnly=0
 
 

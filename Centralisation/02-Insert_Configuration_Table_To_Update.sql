@@ -1,10 +1,10 @@
 e
 
-DELETE FROM [SourceTarget_Table]
-DELETE FROM [TableACopier]
-DELETE FROM [SourceTarget]
+DELETE FROM [_Centralisation_Centralisation_SourceTargetTable]
+DELETE FROM [_Centralisation_TablesToUpdate]
+DELETE FROM [_Centralisation_SourceTarget]
 
-INSERT INTO [dbo].[SourceTarget]
+INSERT INTO [dbo].[_Centralisation_SourceTarget]
            ([SourceDatabase]
            ,[TargetDatabase]
 		   ,[Instance])
@@ -14,7 +14,7 @@ INSERT INTO [dbo].[SourceTarget]
 
 
 
-INSERT INTO [dbo].[TableACopier]
+INSERT INTO [dbo].[_Centralisation_TablesToUpdate]
            ([Name]
            ,[IdNamere]
 		   ,[TypeObject],idObject
@@ -29,7 +29,7 @@ INSERT INTO [dbo].[TableACopier]
 		   ,0)
 
 
-INSERT INTO [dbo].[TableACopier]
+INSERT INTO [dbo].[_Centralisation_TablesToUpdate]
            ([Name]
            ,[IdNamere]
 		   ,[TypeObject],idObject
@@ -43,7 +43,7 @@ INSERT INTO [dbo].[TableACopier]
            ,10
 		   ,0)
 
-INSERT INTO [dbo].[TableACopier]
+INSERT INTO [dbo].[_Centralisation_TablesToUpdate]
            ([Name]
            ,[IdNamere]
 		   ,[TypeObject],idObject
@@ -57,7 +57,7 @@ INSERT INTO [dbo].[TableACopier]
            ,1
 		   ,0)
 
-INSERT INTO [dbo].[TableACopier]
+INSERT INTO [dbo].[_Centralisation_TablesToUpdate]
            ([Name]
            ,[IdNamere]
 		   ,[TypeObject],idObject
@@ -71,7 +71,7 @@ INSERT INTO [dbo].[TableACopier]
            ,0
 		   ,0)
 		
-INSERT INTO [dbo].[TableACopier]
+INSERT INTO [dbo].[_Centralisation_TablesToUpdate]
            ([Name]
            ,[IdNamere]
 		   ,[TypeObject],idObject
@@ -86,7 +86,7 @@ INSERT INTO [dbo].[TableACopier]
 		   ,0)
 
 
-INSERT INTO [dbo].[TableACopier]
+INSERT INTO [dbo].[_Centralisation_TablesToUpdate]
            ([Name]
            ,[IdNamere]
 		   ,[TypeObject],idObject
@@ -100,7 +100,7 @@ INSERT INTO [dbo].[TableACopier]
            ,0
 		   ,0)
 
-INSERT INTO [dbo].[TableACopier]
+INSERT INTO [dbo].[_Centralisation_TablesToUpdate]
            ([Name]
            ,[IdNamere]
 		   ,[TypeObject],idObject
@@ -114,7 +114,7 @@ INSERT INTO [dbo].[TableACopier]
            ,0
 		   ,0)
 
-INSERT INTO [dbo].[TableACopier]
+INSERT INTO [dbo].[_Centralisation_TablesToUpdate]
            ([Name]
            ,[IdNamere]
 		   ,[TypeObject],idObject
@@ -130,7 +130,7 @@ INSERT INTO [dbo].[TableACopier]
 		   
 
 
-INSERT INTO [dbo].[TableACopier]
+INSERT INTO [dbo].[_Centralisation_TablesToUpdate]
            ([Name]
            ,[IdNamere]
 		   ,[TypeObject],idObject
@@ -144,7 +144,7 @@ INSERT INTO [dbo].[TableACopier]
            ,0
 		   ,0)
 
-INSERT INTO [dbo].[TableACopier]
+INSERT INTO [dbo].[_Centralisation_TablesToUpdate]
            ([Name]
            ,[IdNamere]
 		   ,[TypeObject],idObject
@@ -160,10 +160,10 @@ INSERT INTO [dbo].[TableACopier]
 		   ,0)
 
 
- INSERT INTO [dbo].[SourceTarget_Table]
+ INSERT INTO [dbo].[_Centralisation_SourceTargetTable]
            ([fk_SourceTarget]
-           ,[fk_TableACopier])
-		   SELECT s.ID,t.ID FROM TableACopier T JOIN SourceTarget S ON s.SourceDatabase='NARC_TRACK_MACQ_New.dbo.'
+           ,[fk_TablesToUpdate])
+		   SELECT s.ID,t.ID FROM _Centralisation_TablesToUpdate T JOIN _Centralisation_SourceTarget S ON s.SourceDatabase='NARC_TRACK_MACQ_New.dbo.'
 		   WHErE t.name in ('TProtocole','TObservation','TType','TTTypeBase','TTProtocole','TTFrequence','TChampLie','TActivite','TAsyncProcessList','Tunite')
 
 		   

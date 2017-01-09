@@ -1,8 +1,8 @@
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[CopierUneSource]') AND type in (N'P', N'PC'))
-DROP PROCEDURE CopierUneSource
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[_Centralisation_UpdateDBFromReferentiel]') AND type in (N'P', N'PC'))
+DROP PROCEDURE _Centralisation_UpdateDBFromReferentiel
 GO
 
-CREATE PROCEDURE [dbo].[CopierUneSource](
+CREATE PROCEDURE [dbo].[_Centralisation_UpdateDBFromReferentiel](
 	@ID_Centralisation_SourceTarget INT
 )
 AS

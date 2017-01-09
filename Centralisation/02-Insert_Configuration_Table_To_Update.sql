@@ -1,6 +1,4 @@
-e
-
-DELETE FROM [_Centralisation_Centralisation_SourceTargetTable]
+DELETE FROM [_Centralisation_SourceTargetTable]
 DELETE FROM [_Centralisation_TablesToUpdate]
 DELETE FROM [_Centralisation_SourceTarget]
 
@@ -163,8 +161,8 @@ INSERT INTO [dbo].[_Centralisation_TablesToUpdate]
  INSERT INTO [dbo].[_Centralisation_SourceTargetTable]
            ([fk_SourceTarget]
            ,[fk_TablesToUpdate])
-		   SELECT s.ID,t.ID FROM _Centralisation_TablesToUpdate T JOIN _Centralisation_SourceTarget S ON s.SourceDatabase='NARC_TRACK_MACQ_New.dbo.'
-		   WHErE t.name in ('TProtocole','TObservation','TType','TTTypeBase','TTProtocole','TTFrequence','TChampLie','TActivite','TAsyncProcessList','Tunite')
+		   SELECT s.ID,t.ID FROM _Centralisation_TablesToUpdate T JOIN _Centralisation_SourceTarget S ON s.SourceDatabase='ECWP_TRACK_UNDU.dbo.'
+		   WHERE t.name in ('TProtocole','TObservation','TType','TTTypeBase','TTProtocole','TTFrequence','TChampLie','TActivite','TAsyncProcessList','Tunite')
 
 		   
  		   

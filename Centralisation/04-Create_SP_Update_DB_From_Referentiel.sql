@@ -3,7 +3,7 @@ DROP PROCEDURE CopierUneSource
 GO
 
 CREATE PROCEDURE [dbo].[CopierUneSource](
-	@IDSourceTarget INT
+	@ID_Centralisation_SourceTarget INT
 )
 AS
 BEGIN
@@ -24,22 +24,22 @@ BEGIN
 			,@HasError BIT
 			,@DisableConstraint BIT
 
-			--DECLARE @IDSourceTarget INT; SET @IDSourceTarget = 1;
+			--DECLARE @ID_Centralisation_SourceTarget INT; SET @ID_Centralisation_SourceTarget = 1;
 			-- TODO Prendre en compte la table TPropagation
 			-- TODO Pour éviter les conflits synonym utiliser infostatus, cf. Gestion individuhistory 
 	
 			SET @HasError = 0
 
 			SELECT @SourceDatabase = [SourceDatabase],@TargetDatabase=TargetDatabase,@TargetInstance=Instance, @DisableConstraint=DisableConstraint
-			FROM SourceTarget
-			WHERE ID=@IDSourceTarget
+			FROM _Centralisation_SourceTarget
+			WHERE ID=@ID_Centralisation_SourceTarget
 
 			print ' instance ' + convert(varchar,@TargetInstance)
 	
 			--Gestion des contraintes DROP
 			IF @DisableConstraint='True'
 				BEGIN
-					EXEC GestionContrainteReferentiel @IDSourceTarget,'Start',@ProcessOk OUTPUT
+					EXEC GestionContrainteReferentiel @ID_Centralisation_SourceTarget,'Start',@ProcessOk OUTPUT
 					IF @ProcessOk = 0
 						BEGIN
 							SET @HasError  =1
@@ -67,8 +67,8 @@ BEGIN
 
 			DECLARE c_table CURSOR FOR
 				select [Name] ,[IdNamere] ,[TypeObject],idObject
-				FROM TableACopier T JOIN [SourceTarget_Table] S ON t.ID = S.fk_TableACopier
-				WHERE S.[fk_SourceTarget] = @IDSourceTarget
+				FROM _Centralisation_TablesToUpdate T JOIN [_Centralisation__Centralisation_SourceTargetTable] S ON t.ID = S.fk__Centralisation_TablesToUpdate
+				WHERE S.[fk__Centralisation_SourceTarget] = @ID_Centralisation_SourceTarget
 				ORDER by [OrdreExecution]
 
 
@@ -198,7 +198,7 @@ BEGIN
 
 					select * from #IdToDelete
 
-					IF (SELECT AllowDelete FROM TableACopier WHERE Name = @TableName) = 1
+					IF (SELECT AllowDelete FROM _Centralisation_TablesToUpdate WHERE Name = @TableName) = 1
 					BEGIN
 					-- On supprime les ID des objets qui ont comme première règle qui match un valeur de propagation à 0
 						DELETE from #IdToDelete 
@@ -267,7 +267,7 @@ BEGIN
 			--Gestion des contraintes ADD
 			IF @DisableConstraint='True'
 				BEGIN
-					EXEC GestionContrainteReferentiel @IDSourceTarget,'End',@ProcessOk OUTPUT
+					EXEC GestionContrainteReferentiel @ID_Centralisation_SourceTarget,'End',@ProcessOk OUTPUT
 					IF @ProcessOk = 0
 						BEGIN
 							SET @HasError  =1

@@ -1,21 +1,19 @@
+DELETE FROM [_Centralisation_SourceTargetTable]
+DELETE FROM [_Centralisation_TablesToUpdate]
+DELETE FROM [_Centralisation_SourceTarget]
 
-
-DELETE FROM [SourceTarget_Table]
-DELETE FROM [TableACopier]
-DELETE FROM [SourceTarget]
-
-INSERT INTO [dbo].[SourceTarget]
+INSERT INTO [dbo].[_Centralisation_SourceTarget]
            ([SourceDatabase]
            ,[TargetDatabase]
-		   ,[Instance]
-	    ,[DisableConstraint] [bit] NOT NULL CONSTRAINT [DF_SourceTarget_DisableConstraint]  DEFAULT ((0)),)
-		   SELECT 'NARC_TRACK_MACQ_New.dbo.','NARC_TRACK_MACQ.dbo.',i.TIns_PK_ID
-		   from securite.dbo.TInstance I where i.TIns_Database = 'NARC_TRACK_MACQ' and TIns_ReadOnly=0
+	   ,[Instance]
+	   ,[DisableConstraint])
+		   SELECT 'Referentiel_Track.dbo.','ECWP_TRACK_UNDU.dbo.',i.TIns_PK_ID, 'True'
+		   from securite.dbo.TInstance I where i.TIns_Database = 'ECWP_TRACK_UNDU' and TIns_ReadOnly=0
 
 
 
 
-INSERT INTO [dbo].[TableACopier]
+INSERT INTO [dbo].[_Centralisation_TablesToUpdate]
            ([Name]
            ,[IdNamere]
 		   ,[TypeObject],idObject
@@ -30,7 +28,7 @@ INSERT INTO [dbo].[TableACopier]
 		   ,0)
 
 
-INSERT INTO [dbo].[TableACopier]
+INSERT INTO [dbo].[_Centralisation_TablesToUpdate]
            ([Name]
            ,[IdNamere]
 		   ,[TypeObject],idObject
@@ -44,7 +42,7 @@ INSERT INTO [dbo].[TableACopier]
            ,10
 		   ,0)
 
-INSERT INTO [dbo].[TableACopier]
+INSERT INTO [dbo].[_Centralisation_TablesToUpdate]
            ([Name]
            ,[IdNamere]
 		   ,[TypeObject],idObject
@@ -58,7 +56,7 @@ INSERT INTO [dbo].[TableACopier]
            ,1
 		   ,0)
 
-INSERT INTO [dbo].[TableACopier]
+INSERT INTO [dbo].[_Centralisation_TablesToUpdate]
            ([Name]
            ,[IdNamere]
 		   ,[TypeObject],idObject
@@ -72,7 +70,7 @@ INSERT INTO [dbo].[TableACopier]
            ,0
 		   ,0)
 		
-INSERT INTO [dbo].[TableACopier]
+INSERT INTO [dbo].[_Centralisation_TablesToUpdate]
            ([Name]
            ,[IdNamere]
 		   ,[TypeObject],idObject
@@ -87,7 +85,7 @@ INSERT INTO [dbo].[TableACopier]
 		   ,0)
 
 
-INSERT INTO [dbo].[TableACopier]
+INSERT INTO [dbo].[_Centralisation_TablesToUpdate]
            ([Name]
            ,[IdNamere]
 		   ,[TypeObject],idObject
@@ -101,7 +99,7 @@ INSERT INTO [dbo].[TableACopier]
            ,0
 		   ,0)
 
-INSERT INTO [dbo].[TableACopier]
+INSERT INTO [dbo].[_Centralisation_TablesToUpdate]
            ([Name]
            ,[IdNamere]
 		   ,[TypeObject],idObject
@@ -115,7 +113,7 @@ INSERT INTO [dbo].[TableACopier]
            ,0
 		   ,0)
 
-INSERT INTO [dbo].[TableACopier]
+INSERT INTO [dbo].[_Centralisation_TablesToUpdate]
            ([Name]
            ,[IdNamere]
 		   ,[TypeObject],idObject
@@ -131,7 +129,7 @@ INSERT INTO [dbo].[TableACopier]
 		   
 
 
-INSERT INTO [dbo].[TableACopier]
+INSERT INTO [dbo].[_Centralisation_TablesToUpdate]
            ([Name]
            ,[IdNamere]
 		   ,[TypeObject],idObject
@@ -145,7 +143,7 @@ INSERT INTO [dbo].[TableACopier]
            ,0
 		   ,0)
 
-INSERT INTO [dbo].[TableACopier]
+INSERT INTO [dbo].[_Centralisation_TablesToUpdate]
            ([Name]
            ,[IdNamere]
 		   ,[TypeObject],idObject
@@ -161,11 +159,11 @@ INSERT INTO [dbo].[TableACopier]
 		   ,0)
 
 
- INSERT INTO [dbo].[SourceTarget_Table]
+ INSERT INTO [dbo].[_Centralisation_SourceTargetTable]
            ([fk_SourceTarget]
-           ,[fk_TableACopier])
-		   SELECT s.ID,t.ID FROM TableACopier T JOIN SourceTarget S ON s.SourceDatabase='NARC_TRACK_MACQ_New.dbo.'
-		   WHErE t.name in ('TProtocole','TObservation','TType','TTTypeBase','TTProtocole','TTFrequence','TChampLie','TActivite','TAsyncProcessList','Tunite')
+           ,[fk_TablesToUpdate])
+		   SELECT s.ID,t.ID FROM _Centralisation_TablesToUpdate T JOIN _Centralisation_SourceTarget S ON s.SourceDatabase='ECWP_TRACK_UNDU.dbo.'
+		   WHERE t.name in ('TProtocole','TObservation','TType','TTTypeBase','TTProtocole','TTFrequence','TChampLie','TActivite','TAsyncProcessList','Tunite')
 
 		   
  		   

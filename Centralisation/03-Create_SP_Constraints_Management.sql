@@ -1,11 +1,10 @@
 
-
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[GestionContrainteReferentiel]') AND type in (N'P', N'PC'))
-DROP PROCEDURE GestionContrainteReferentiel
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[_Centralisation_ConstraintsManagement]') AND type in (N'P', N'PC'))
+DROP PROCEDURE _Centralisation_ConstraintsManagement
 GO
 
-CREATE PROCEDURE [dbo].[GestionContrainteReferentiel](
-	@IDSourceTarget INT,
+CREATE PROCEDURE [dbo].[_Centralisation_ConstraintsManagement](
+	@ID_Centralisation_SourceTarget INT,
 	@ProcessusStage VARCHAR(5),  --Possible values =Start or End
 	@ProcessusOk BIT OUTPUT 
 )
@@ -29,8 +28,8 @@ BEGIN
 				  ,@TargetDatabase=[TargetDatabase]
 				  ,@Instance=[Instance]
 				  ,@DisableConstraint=[DisableConstraint]
-			FROM [dbo].[SourceTarget]
-			WHERE [ID] = @IDSourceTarget
+			FROM [dbo].[_Centralisation_SourceTarget]
+			WHERE [ID] = @ID_Centralisation_SourceTarget
 
 			IF @ProcessusStage = 'Start'
 				BEGIN
@@ -70,8 +69,8 @@ BEGIN
 					WHERE SO.xtype IN ('F','D') 
 					AND OBJECT_NAME(SO.PARENT_OBJ) IN (SELECT DISTINCT [Name] 
 															FROM [dbo].[TableACopier] TAC 
-															INNER JOIN [dbo].[SourceTarget_Table] STT ON TAC.ID = STT.[fk_TableACopier]
-														WHERE [fk_SourceTarget] = @IDSourceTarget)
+															INNER JOIN [dbo].[_Centralisation_SourceTarget_Table] STT ON TAC.ID = STT.[fk_TableACopier]
+														WHERE [fk__Centralisation_SourceTarget] = @ID_Centralisation_SourceTarget)
 					print 'SQLSTART='+COALESCE(@SQL,'NULL')
 					EXEC(@SQL)
 					SET @cur_SQL = 'IF EXISTS (SELECT * FROM sys.synonyms WHERE name = ''current_sysobjects'')  drop synonym current_sysobjects ; 
@@ -130,8 +129,8 @@ BEGIN
 					WHERE SO.xtype IN ('F','D') 
 					AND OBJECT_NAME(SO.PARENT_OBJ) IN (SELECT DISTINCT [Name] 
 															FROM [dbo].[TableACopier] TAC 
-															INNER JOIN [dbo].[SourceTarget_Table] STT ON TAC.ID = STT.[fk_TableACopier]
-														WHERE [fk_SourceTarget] = @IDSourceTarget)
+															INNER JOIN [dbo].[_Centralisation_SourceTarget_Table] STT ON TAC.ID = STT.[fk_TableACopier]
+														WHERE [fk__Centralisation_SourceTarget] = @ID_Centralisation_SourceTarget)
 					print 'SQLEND='+COALESCE(@SQL,'NULL')
 					EXEC(@SQL)
 					SET @cur_SQL = 'IF EXISTS (SELECT * FROM sys.synonyms WHERE name = ''current_sysobjects'')  drop synonym current_sysobjects ; 

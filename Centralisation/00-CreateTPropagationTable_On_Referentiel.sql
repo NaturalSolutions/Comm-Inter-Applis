@@ -22,7 +22,7 @@ CREATE TABLE [dbo].[TPropagation](
 ) 
 
 
--- insertion de la règle de propagation par défaut.
+-- insertion de la rÃ¨gle de propagation par dÃ©faut.
 
 INSERT INTO [dbo].[TPropagation]
            ([FB_ID]

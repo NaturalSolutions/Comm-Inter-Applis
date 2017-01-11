@@ -67,8 +67,8 @@ BEGIN
 
 			DECLARE c_table CURSOR FOR
 				select [Name] ,[IdNamere] ,[TypeObject],idObject
-				FROM _Centralisation_TablesToUpdate T JOIN [_Centralisation__Centralisation_SourceTargetTable] S ON t.ID = S.fk__Centralisation_TablesToUpdate
-				WHERE S.[fk__Centralisation_SourceTarget] = @ID_Centralisation_SourceTarget
+				FROM _Centralisation_TablesToUpdate T JOIN [_Centralisation_SourceTargetTable] S ON t.ID = S.fk_TablesToUpdate
+				WHERE S.[fk_SourceTarget] = @ID_Centralisation_SourceTarget
 				ORDER by [OrdreExecution]
 
 

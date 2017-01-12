@@ -128,8 +128,8 @@ BEGIN
 						LEFT OUTER JOIN current_referential_constraints RC ON RC.CONSTRAINT_NAME = SO.name
 					WHERE SO.xtype IN ('F','D') 
 					AND OBJECT_NAME(SO.PARENT_OBJ) IN (SELECT DISTINCT [Name] 
-															FROM [dbo].[TableACopier] TAC 
-															INNER JOIN [dbo].[_Centralisation_SourceTarget_Table] STT ON TAC.ID = STT.[fk_TableACopier]
+															FROM [dbo].[_Centralisation_TablesToUpdate] TAC 
+															INNER JOIN [dbo].[_Centralisation_SourceTarget_Table] STT ON TAC.ID = STT.[fk_TablesToUpdate]
 														WHERE [fk__Centralisation_SourceTarget] = @ID_Centralisation_SourceTarget)
 					print 'SQLEND='+COALESCE(@SQL,'NULL')
 					EXEC(@SQL)

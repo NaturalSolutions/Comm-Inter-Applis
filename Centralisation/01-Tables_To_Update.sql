@@ -41,7 +41,6 @@ PRIMARY KEY CLUSTERED
 
 
 
-
 CREATE TABLE _Centralisation_SourceTargetTable(
 ID [int] IDENTITY(1,1),
 fk_SourceTarget INT NULL
@@ -52,3 +51,11 @@ PRIMARY KEY CLUSTERED
 )
 )
 
+
+ALTER TABLE [dbo]._Centralisation_SourceTargetTable  WITH CHECK ADD FOREIGN KEY(fk_SourceTarget)
+REFERENCES [dbo].SourceTarget ([ID])
+GO
+
+ALTER TABLE [dbo]._Centralisation_SourceTargetTable  WITH CHECK ADD FOREIGN KEY(fk_TablesToUpdate)
+REFERENCES [dbo]._Centralisation_TablesToUpdate ([ID])
+GO

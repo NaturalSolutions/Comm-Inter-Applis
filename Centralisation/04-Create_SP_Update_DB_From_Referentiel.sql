@@ -167,7 +167,7 @@ BEGIN
 
 					exec sp_executesql @SQLInsert
 					INSERT INTO NSLog.dbo.TLOG_MESSAGES
-						VALUES (GETDATE(), 1, 'Centralisation', 'SP : CopierUneSource', 'No user', 2,
+						VALUES (GETDATE(), 1, 'Centralisation', 'SP : _Centralisation_UpdateDBFromReferentiel', 'No user', 2,
 						4, CONVERT(varchar,(select count(*) from #IdToUpdate))+ ' rows INSERTED or UPDATED in '+@TargetDatabase +  @TableName
 						, 'Concerned ID: ' + CONVERT(varchar,(SELECT STUFF((SELECT ','+ CONVERT(varchar,f.ID)
 																FROM #IdToUpdate f
@@ -220,7 +220,7 @@ BEGIN
 						exec sp_executesql @SQLFinalDelete
 
 							INSERT INTO NSLog.dbo.TLOG_MESSAGES
-							VALUES (GETDATE(), 1, 'Centralisation', 'SP : CopierUneSource', 'No user', 2,
+							VALUES (GETDATE(), 1, 'Centralisation', 'SP : _Centralisation_UpdateDBFromReferentiel', 'No user', 2,
 							3, CONVERT(varchar,(select count(*) from #IdToDelete))+ ' rows DELETED in '+@TargetDatabase +  @TableName
 							, 'Concerned ID: ' + CONVERT(varchar,(SELECT STUFF((SELECT ','+ CONVERT(varchar,f.ID)
 																	FROM #IdToDelete f
@@ -243,7 +243,7 @@ BEGIN
 					SET @ErrorMessage = REPLACE(@ErrorMessage,'''','''''')
 				
 					SET @mem_error = @mem_error +'INSERT INTO NSLog.dbo.TLOG_MESSAGES
-						VALUES (GETDATE(), 2, ''Centralisation'', ''SP : CopierUneSource'', ''No user'', 2,
+						VALUES (GETDATE(), 2, ''Centralisation'', ''SP : _Centralisation_UpdateDBFromReferentiel'', ''No user'', 2,
 						'+STR(@ErrorState)+', '''+@ErrorMessage+''', ''Severity: '' + CONVERT(varchar,'+STR(@ErrorSeverity)+')+''  Object: '''''+@TypeObject+'''''''); '
 				
 				END CATCH	
@@ -293,7 +293,7 @@ BEGIN
 			@ErrorState = ERROR_STATE();
 			SET @ErrorMessage = REPLACE(@ErrorMessage,'''','''''')
 			SET @mem_error = @mem_error +'INSERT INTO NSLog.dbo.TLOG_MESSAGES
-						VALUES (GETDATE(), 4, ''Centralisation'', ''SP : CopierUneSource'', ''No user'', 2,
+						VALUES (GETDATE(), 4, ''Centralisation'', ''SP : _Centralisation_UpdateDBFromReferentiel'', ''No user'', 2,
 						'+STR(@ErrorState)+', '''+@ErrorMessage+''', ''Severity: '' + CONVERT(varchar,'+STR(@ErrorSeverity)+')+''  Localisation: Global error. Rollback Tran in catch.''); '
 			--print '=0>'+@mem_error
 			EXEC(@mem_error)

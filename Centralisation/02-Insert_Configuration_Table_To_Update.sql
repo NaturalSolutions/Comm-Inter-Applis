@@ -167,3 +167,6 @@ INSERT INTO [dbo].[_Centralisation_TablesToUpdate]
 
 		   
  		   
+  -- INSERT INTO [Referentiel_Track].[dbo].[_Centralisation_SourceTargetTable]
+  -- SELECT distinct 1,[ID]
+  -- FROM [Referentiel_Track].[dbo].[_Centralisation_TablesToUpdate]

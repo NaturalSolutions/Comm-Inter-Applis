@@ -53,7 +53,7 @@ PRIMARY KEY CLUSTERED
 
 
 ALTER TABLE [dbo]._Centralisation_SourceTargetTable  WITH CHECK ADD FOREIGN KEY(fk_SourceTarget)
-REFERENCES [dbo].SourceTarget ([ID])
+REFERENCES [dbo]._Centralisation_SourceTargetTable ([ID])
 GO
 
 ALTER TABLE [dbo]._Centralisation_SourceTargetTable  WITH CHECK ADD FOREIGN KEY(fk_TablesToUpdate)

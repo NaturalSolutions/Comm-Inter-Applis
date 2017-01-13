@@ -297,6 +297,10 @@ BEGIN
 						'+STR(@ErrorState)+', '''+@ErrorMessage+''', ''Severity: '' + CONVERT(varchar,'+STR(@ErrorSeverity)+')+''  Localisation: Global error. Rollback Tran in catch.''); '
 			--print '=0>'+@mem_error
 			EXEC(@mem_error)
+			RAISERROR ('Global Error in _Centralisation_UpdateDBFromReferentiel, Ending process, see TLOG_MESSAGES for details' , -- Message text.
+									16, -- Severity.
+									2 -- State.
+									);
 	END CATCH
 
 
